@@ -9,18 +9,22 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Tron extends Core implements KeyListener, MouseListener, MouseMotionListener {
     private int moveAmount = 5;
 
-    private Player player1;
-    private Player player2;
+    private List<Player> players;
 
     public void init() {
         super.init();
 
-        player1 = new Player(Color.GREEN, new Point(40, 40), Direction.RIGHT);
-        player2 = new Player(Color.RED, new Point(600, 400), Direction.LEFT);
+        players = new ArrayList<>();
+
+        Player player1 = new Player(Color.GREEN, new Point(40, 40), Direction.RIGHT);
+        Player player2 = new Player(Color.RED, new Point(600, 400), Direction.LEFT);
+        players.add(player1);
+        players.add(player2);
 
         Window window = screenManager.getFullScreenWindow();
         window.addKeyListener(this);
@@ -28,29 +32,52 @@ public class Tron extends Core implements KeyListener, MouseListener, MouseMotio
         window.addMouseMotionListener(this);
     }
 
-    public void draw(Graphics2D g) {
-        movePlayer(player1);
-        movePlayer(player2);
+    public void draw(Graphics2D graphics) {
+        movePlayers();
 
-        for (int i = 0; i < player1.getPath().size(); i++) {
-            if ((player1.getCurrentPosition().equals(player1.getPath().get(i)))
-                    || (player1.getCurrentPosition().equals(player2.getPath().get(i)))
-                    || (player2.getCurrentPosition().equals(player1.getPath().get(i)))
-                    || (player2.getCurrentPosition().equals(player2.getPath().get(i)))) {
-                System.exit(0);
+        if (isGameFinished()){
+            System.exit(0);
+        }
+
+        addPlayersPath();
+
+        graphics.setColor(Color.BLACK);
+        graphics.fillRect(0, 0, screenManager.getWidth(), screenManager.getHeight());
+
+        drawPlayers(graphics);
+    }
+
+    private void drawPlayers(Graphics2D graphics){
+        for (Player player : players){
+            drawPlayer(graphics, player);
+        }
+    }
+
+    private void drawPlayer(Graphics2D graphics, Player player){
+        graphics.setColor(player.getColor());
+
+        for (Point point : player.getPath()){
+            graphics.fillRect(point.x, point.y, 10, 10);
+        }
+    }
+
+    private boolean isGameFinished(){
+        for (Player player1 : players){
+            for (Player player2 : players){
+                for (Point position : player2.getPath()){
+                    if (player1.getCurrentPosition().equals(position)){
+                        return true;
+                    }
+                }
             }
         }
 
-        player1.getPath().add(player1.getCurrentPosition());
-        player2.getPath().add(player2.getCurrentPosition());
+        return false;
+    }
 
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, screenManager.getWidth(), screenManager.getHeight());
-        for (int i = 0; i < player1.getPath().size(); i++) {
-            g.setColor(Color.green);
-            g.fillRect(player1.getPath().get(i).x, player1.getPath().get(i).y, 10, 10);
-            g.setColor(Color.red);
-            g.fillRect(player2.getPath().get(i).x, player2.getPath().get(i).y, 10, 10);
+    private void movePlayers(){
+        for (Player player : players){
+            movePlayer(player);
         }
     }
 
@@ -91,7 +118,15 @@ public class Tron extends Core implements KeyListener, MouseListener, MouseMotio
         player.setCurrentPosition(playerPosition);
     }
 
+    private void addPlayersPath(){
+        for (Player player : players){
+            player.getPath().add(player.getCurrentPosition());
+        }
+    }
+
     public void keyPressed(KeyEvent e) {
+        Player player1 = players.get(0);
+        Player player2 = players.get(1);
         if (e.getKeyCode() == KeyEvent.VK_UP) {
             if (player1.getDirection() != Direction.DOWN) {
                 player1.setDirection(Direction.UP);
