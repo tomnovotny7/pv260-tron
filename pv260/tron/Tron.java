@@ -15,6 +15,7 @@ public class Tron extends Core implements KeyListener, MouseListener, MouseMotio
     private int moveAmount = 5;
 
     private List<Player> players;
+    private InputController inputController;
 
     public void init() {
         super.init();
@@ -23,8 +24,20 @@ public class Tron extends Core implements KeyListener, MouseListener, MouseMotio
 
         Player player1 = new Player(Color.GREEN, new Point(40, 40), Direction.RIGHT);
         Player player2 = new Player(Color.RED, new Point(600, 400), Direction.LEFT);
+        Player player3 = new Player(Color.BLUE, new Point(300, 200), Direction.LEFT);
         players.add(player1);
         players.add(player2);
+        players.add(player3);
+
+        inputController = new InputController();
+        inputController.addController(new PlayerKeyController(player1,
+                new KeyControls(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT)));
+        inputController.addController(new PlayerKeyController(player2,
+                new KeyControls(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_A)));
+        inputController.addController(new PlayerMouseController(player3,
+                new MouseControls(MouseEvent.BUTTON1, MouseEvent.BUTTON3)));
+
+
 
         Window window = screenManager.getFullScreenWindow();
         window.addKeyListener(this);
@@ -125,42 +138,7 @@ public class Tron extends Core implements KeyListener, MouseListener, MouseMotio
     }
 
     public void keyPressed(KeyEvent e) {
-        Player player1 = players.get(0);
-        Player player2 = players.get(1);
-        if (e.getKeyCode() == KeyEvent.VK_UP) {
-            if (player1.getDirection() != Direction.DOWN) {
-                player1.setDirection(Direction.UP);
-            }
-        } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            if (player1.getDirection() != Direction.UP) {
-                player1.setDirection(Direction.DOWN);
-            }
-        } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            if (player1.getDirection() != Direction.LEFT) {
-                player1.setDirection(Direction.RIGHT);
-            }
-        } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            if (player1.getDirection() != Direction.RIGHT) {
-                player1.setDirection(Direction.LEFT);
-            }
-        }
-        if (e.getKeyCode() == KeyEvent.VK_W) {
-            if (player2.getDirection() != Direction.DOWN) {
-                player2.setDirection(Direction.UP);
-            }
-        } else if (e.getKeyCode() == KeyEvent.VK_S) {
-            if (player2.getDirection() != Direction.UP) {
-                player2.setDirection(Direction.DOWN);
-            }
-        } else if (e.getKeyCode() == KeyEvent.VK_D) {
-            if (player2.getDirection() != Direction.LEFT) {
-                player2.setDirection(Direction.RIGHT);
-            }
-        } else if (e.getKeyCode() == KeyEvent.VK_A) {
-            if (player2.getDirection() != Direction.RIGHT) {
-                player2.setDirection(Direction.LEFT);
-            }
-        }
+        inputController.handleInput(e.getKeyCode());
     }
 
     public void keyReleased(KeyEvent e) {
@@ -182,6 +160,7 @@ public class Tron extends Core implements KeyListener, MouseListener, MouseMotio
     }
 
     public void mousePressed(MouseEvent e) {
+        inputController.handleInput(e.getButton());
     }
 
     public void mouseReleased(MouseEvent e) {
