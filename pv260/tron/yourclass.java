@@ -1,3 +1,5 @@
+package pv260.tron;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -31,10 +33,6 @@ public class yourclass extends Core implements KeyListener, MouseListener,
 		w.addKeyListener(this);
 		w.addMouseListener(this);
 		w.addMouseMotionListener(this);
-	}
-
-	public static void main(String[] args) {
-		new yourclass().run();
 	}
 
 	public void draw(Graphics2D g) {
