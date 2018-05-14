@@ -7,9 +7,9 @@ public abstract class Core {
 
     private static final DisplayMode modes[] =
             {
-                    //new DisplayMode(1920,1080,32,0),
+                    new DisplayMode(1920, 1080, 32, 0),
                     new DisplayMode(1680, 1050, 32, 0),
-                    //new DisplayMode(1280,1024,32,0),
+                    new DisplayMode(1280, 1024, 32, 0),
                     new DisplayMode(800, 600, 32, 0),
                     new DisplayMode(800, 600, 24, 0),
                     new DisplayMode(800, 600, 16, 0),
@@ -18,7 +18,7 @@ public abstract class Core {
                     new DisplayMode(640, 480, 16, 0),
             };
     private boolean running;
-    protected ScreenManager sm;
+    protected ScreenManager screenManager;
 
     public void stop() {
         running = false;
@@ -29,34 +29,33 @@ public abstract class Core {
             init();
             gameLoop();
         } finally {
-            sm.restoreScreen();
+            screenManager.restoreScreen();
         }
     }
 
     public void init() {
-        sm = new ScreenManager();
-        DisplayMode dm = sm.findFirstCompatibaleMode(modes);
-        sm.setFullScreen(dm);
-        Window w = sm.getFullScreenWindow();
-        w.setFont(new Font("Arial", Font.PLAIN, 20));
-        w.setBackground(Color.WHITE);
-        w.setForeground(Color.RED);
-        w.setCursor(w.getToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "null"));
+        screenManager = new ScreenManager();
+        DisplayMode compatibleDisplayMode = screenManager.findFirstCompatibleMode(modes);
+        screenManager.setFullScreen(compatibleDisplayMode);
+        Window window = screenManager.getFullScreenWindow();
+        window.setFont(new Font("Arial", Font.PLAIN, 20));
+        window.setBackground(Color.WHITE);
+        window.setForeground(Color.RED);
+        window.setCursor(window.getToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "null"));
         running = true;
     }
 
     public void gameLoop() {
-        long startTime = System.currentTimeMillis();
-        long cumTime = startTime;
+        long cumTime = System.currentTimeMillis();
 
         while (running) {
             long timePassed = System.currentTimeMillis() - cumTime;
             cumTime += timePassed;
             update(timePassed);
-            Graphics2D g = sm.getGraphics();
+            Graphics2D g = screenManager.getGraphics();
             draw(g);
             g.dispose();
-            sm.update();
+            screenManager.update();
 
             try {
                 Thread.sleep(20);

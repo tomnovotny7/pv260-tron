@@ -8,20 +8,20 @@ import javax.swing.JFrame;
 
 public class ScreenManager {
 
-    private GraphicsDevice vc;
+    private GraphicsDevice graphicsDevice;
 
     public ScreenManager() {
         GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        vc = e.getDefaultScreenDevice();
+        graphicsDevice = e.getDefaultScreenDevice();
     }
 
     public DisplayMode[] getCompatibleDisplayModes() {
-        return vc.getDisplayModes();
+        return graphicsDevice.getDisplayModes();
     }
 
-    public DisplayMode findFirstCompatibaleMode(DisplayMode[] modes) {
+    public DisplayMode findFirstCompatibleMode(DisplayMode[] modes) {
 
-        DisplayMode goodModes[] = vc.getDisplayModes();
+        DisplayMode goodModes[] = graphicsDevice.getDisplayModes();
         for (int x = 0; x < modes.length; x++) {
             for (int y = 0; y < goodModes.length; y++) {
                 if (displayModesMatch(modes[x], goodModes[y])) {
@@ -32,8 +32,8 @@ public class ScreenManager {
         return null;
     }
 
-    public DisplayMode getCurrentDM() {
-        return vc.getDisplayMode();
+    public DisplayMode getCurrentDisplayMode() {
+        return graphicsDevice.getDisplayMode();
     }
 
     public boolean displayModesMatch(DisplayMode m1, DisplayMode m2) {
@@ -54,11 +54,11 @@ public class ScreenManager {
         f.setUndecorated(true);
         f.setIgnoreRepaint(true);
         f.setResizable(false);
-        vc.setFullScreenWindow(f);
+        graphicsDevice.setFullScreenWindow(f);
 
-        if (dm != null && vc.isDisplayChangeSupported()) {
+        if (dm != null && graphicsDevice.isDisplayChangeSupported()) {
             try {
-                vc.setDisplayMode(dm);
+                graphicsDevice.setDisplayMode(dm);
             } catch (Exception ex) {
             }
             f.createBufferStrategy(2);
@@ -66,7 +66,7 @@ public class ScreenManager {
     }
 
     public Graphics2D getGraphics() {
-        Window w = vc.getFullScreenWindow();
+        Window w = graphicsDevice.getFullScreenWindow();
         if (w != null) {
             BufferStrategy bs = w.getBufferStrategy();
             return (Graphics2D) bs.getDrawGraphics();
@@ -76,7 +76,7 @@ public class ScreenManager {
     }
 
     public void update() {
-        Window w = vc.getFullScreenWindow();
+        Window w = graphicsDevice.getFullScreenWindow();
         if (w != null) {
             BufferStrategy bs = w.getBufferStrategy();
             if (!bs.contentsLost()) {
@@ -86,11 +86,11 @@ public class ScreenManager {
     }
 
     public Window getFullScreenWindow() {
-        return vc.getFullScreenWindow();
+        return graphicsDevice.getFullScreenWindow();
     }
 
     public int getWidth() {
-        Window w = vc.getFullScreenWindow();
+        Window w = graphicsDevice.getFullScreenWindow();
         if (w != null) {
             return w.getWidth();
         } else {
@@ -99,7 +99,7 @@ public class ScreenManager {
     }
 
     public int getHeight() {
-        Window w = vc.getFullScreenWindow();
+        Window w = graphicsDevice.getFullScreenWindow();
         if (w != null) {
             return w.getHeight();
         } else {
@@ -108,15 +108,15 @@ public class ScreenManager {
     }
 
     public void restoreScreen() {
-        Window w = vc.getFullScreenWindow();
+        Window w = graphicsDevice.getFullScreenWindow();
         if (w != null) {
             w.dispose();
         }
-        vc.setFullScreenWindow(null);
+        graphicsDevice.setFullScreenWindow(null);
     }
 
-    public BufferedImage createCompatibaleimage(int w, int h, int t) {
-        Window win = vc.getFullScreenWindow();
+    public BufferedImage createCompatibleImage(int w, int h, int t) {
+        Window win = graphicsDevice.getFullScreenWindow();
         if (win != null) {
             GraphicsConfiguration gc = win.getGraphicsConfiguration();
             return gc.createCompatibleImage(w, h, t);
