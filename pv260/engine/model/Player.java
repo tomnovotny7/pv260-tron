@@ -5,6 +5,7 @@ import com.sun.javafx.scene.traversal.Direction;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Player {
     private Color color;
@@ -41,5 +42,22 @@ public class Player {
 
     public List<Point> getPath() {
         return path;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return Objects.equals(color, player.color) &&
+                Objects.equals(currentPosition, player.currentPosition) &&
+                direction == player.direction &&
+                Objects.equals(path, player.path);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(color, currentPosition, direction, path);
     }
 }

@@ -1,7 +1,5 @@
 package pv260.engine;
 
-import pv260.engine.model.IEngineModel;
-
 import java.awt.*;
         import java.awt.event.KeyEvent;
         import java.awt.event.KeyListener;
@@ -10,16 +8,7 @@ import java.awt.*;
         import java.awt.event.MouseMotionListener;
 
 public abstract class Engine extends Core implements KeyListener, MouseListener, MouseMotionListener {
-    protected final int MOVE_AMOUNT = 5;
     protected final int LINE_WIDTH = 10;
-
-    private IEngineModel engineModel;
-
-    public Engine(IEngineModel engineModel){
-        super();
-
-        this.engineModel = engineModel;
-    }
 
     public void init() {
         super.init();
@@ -32,13 +21,11 @@ public abstract class Engine extends Core implements KeyListener, MouseListener,
 
     public abstract void tick();
 
-    protected abstract boolean isGameFinished();
+    public abstract void keyPressed(KeyEvent e);
 
-    protected abstract void movePlayers();
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        engineModel.keyPressed(e);
+    public void exit(){
+        stop();
+        System.exit(0);
     }
 
     public void keyReleased(KeyEvent e) {
@@ -59,10 +46,7 @@ public abstract class Engine extends Core implements KeyListener, MouseListener,
     public void mouseExited(MouseEvent arg0) {
     }
 
-    @Override
-    public void mousePressed(MouseEvent e) {
-        engineModel.mousePressed(e);
-    }
+    public abstract void mousePressed(MouseEvent e);
 
     public void mouseReleased(MouseEvent e) {
     }

@@ -5,6 +5,6 @@ import pv260.tron.model.TronModel;
 
 public class Main {
     public static void main(String[] args) {
-        new Tron(new TronModel()).run();
+        new Tron().run();
     }
 }

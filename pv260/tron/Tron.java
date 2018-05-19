@@ -13,14 +13,10 @@ import java.awt.event.MouseEvent;
 public class Tron extends Engine {
     private TronModel tronModel;
 
-    public Tron(TronModel tronModel){
-        super(tronModel);
-
-        this.tronModel = tronModel;
-    }
-
     public void init() {
         super.init();
+
+        tronModel = new TronModel(screenManager.getHeight(), screenManager.getWidth());
 
         Player player1 = new Player(Color.GREEN, new Point(40, 40), Direction.RIGHT);
         Player player2 = new Player(Color.RED, new Point(600, 400), Direction.LEFT);
@@ -35,22 +31,24 @@ public class Tron extends Engine {
     }
 
     public void tick(){
-        movePlayers();
+        tronModel.movePlayers();
 
-        if (isGameFinished()){
-            System.exit(0);
+        if (tronModel.isGameFinished()){
+            exit();
         }
-
-        addPlayersPath();
 
         draw(screenManager.getGraphics());
     }
 
     public void draw(Graphics2D graphics) {
-        graphics.setColor(Color.BLACK);
-        graphics.fillRect(0, 0, screenManager.getWidth(), screenManager.getHeight());
+        drawBackground(graphics);
 
         drawPlayers(graphics);
+    }
+
+    private void drawBackground(Graphics2D graphics){
+        graphics.setColor(Color.BLACK);
+        graphics.fillRect(0, 0, screenManager.getWidth(), screenManager.getHeight());
     }
 
     private void drawPlayers(Graphics2D graphics){
@@ -67,66 +65,13 @@ public class Tron extends Engine {
         }
     }
 
-    protected boolean isGameFinished(){
-        for (Player player1 : tronModel.getPlayers()){
-            for (Player player2 : tronModel.getPlayers()){
-                for (Point position : player2.getPath()){
-                    if (player1.getCurrentPosition().equals(position)){
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
+    @Override
+    public void keyPressed(KeyEvent e) {
+        tronModel.keyPressed(e);
     }
 
-    protected void movePlayers(){
-        for (Player player : tronModel.getPlayers()){
-            movePlayer(player);
-        }
-    }
-
-    private void movePlayer(Player player){
-        Point playerPosition = new Point(player.getCurrentPosition());
-
-        switch (player.getDirection()){
-            case UP:
-                if (playerPosition.y > 0) {
-                    playerPosition.y -= MOVE_AMOUNT;
-                } else {
-                    playerPosition.y = screenManager.getHeight();
-                }
-                break;
-            case RIGHT:
-                if (playerPosition.x < screenManager.getWidth()) {
-                    playerPosition.x += MOVE_AMOUNT;
-                } else {
-                    playerPosition.x = 0;
-                }
-                break;
-            case DOWN:
-                if (playerPosition.y < screenManager.getHeight()) {
-                    playerPosition.y += MOVE_AMOUNT;
-                } else {
-                    playerPosition.y = 0;
-                }
-                break;
-            case LEFT:
-                if (playerPosition.x > 0) {
-                    playerPosition.x -= MOVE_AMOUNT;
-                } else {
-                    playerPosition.x = screenManager.getWidth();
-                }
-                break;
-        }
-
-        player.setCurrentPosition(playerPosition);
-    }
-
-    private void addPlayersPath(){
-        for (Player player : tronModel.getPlayers()){
-            player.getPath().add(player.getCurrentPosition());
-        }
+    @Override
+    public void mousePressed(MouseEvent e) {
+        tronModel.mousePressed(e);
     }
 }
