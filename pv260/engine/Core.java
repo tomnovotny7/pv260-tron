@@ -54,9 +54,9 @@ public abstract class Core {
             long timePassed = System.currentTimeMillis() - cumTime;
             cumTime += timePassed;
             update(timePassed);
-            Graphics2D g = screenManager.getGraphics();
-            draw(g);
-            g.dispose();
+            Graphics2D graphics = screenManager.getGraphics();
+            tick();
+            graphics.dispose();
             screenManager.update();
 
             try {
@@ -69,6 +69,6 @@ public abstract class Core {
     public void update(long timePassed) {
     }
 
-    public abstract void draw(Graphics2D graphics);
+    public abstract void tick();
 
 }

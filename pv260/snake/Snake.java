@@ -1,40 +1,30 @@
-package pv260.tron;
+package pv260.snake;
 
 import com.sun.javafx.scene.traversal.Direction;
 import pv260.engine.Engine;
-import pv260.engine.control.*;
+import pv260.engine.control.KeyControls;
+import pv260.engine.control.MouseControls;
+import pv260.engine.control.PlayerKeyController;
+import pv260.engine.control.PlayerMouseController;
 import pv260.engine.model.Player;
-import pv260.tron.model.TronModel;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-public class Tron extends Engine {
-    private TronModel tronModel;
-
-    public Tron(TronModel tronModel){
-        super(tronModel);
-
-        this.tronModel = tronModel;
-    }
+public class Snake /*extends Engine*/ {
+    /*private int score = 0;
 
     public void init() {
         super.init();
 
         Player player1 = new Player(Color.GREEN, new Point(40, 40), Direction.RIGHT);
-        Player player2 = new Player(Color.RED, new Point(600, 400), Direction.LEFT);
-        Player player3 = new Player(Color.BLUE, new Point(300, 200), Direction.LEFT);
 
-        tronModel.addPlayer(player1, new PlayerKeyController(player1,
+        addPlayer(player1, new PlayerKeyController(player1,
                 new KeyControls(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT)));
-        tronModel.addPlayer(player2, new PlayerKeyController(player2,
-                new KeyControls(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_A)));
-        tronModel.addPlayer(player3, new PlayerMouseController(player3,
-                new MouseControls(MouseEvent.BUTTON1, MouseEvent.BUTTON3)));
     }
 
-    public void tick(){
+    public void draw(Graphics2D graphics) {
         movePlayers();
 
         if (isGameFinished()){
@@ -43,10 +33,6 @@ public class Tron extends Engine {
 
         addPlayersPath();
 
-        draw(screenManager.getGraphics());
-    }
-
-    public void draw(Graphics2D graphics) {
         graphics.setColor(Color.BLACK);
         graphics.fillRect(0, 0, screenManager.getWidth(), screenManager.getHeight());
 
@@ -54,7 +40,7 @@ public class Tron extends Engine {
     }
 
     private void drawPlayers(Graphics2D graphics){
-        for (Player player : tronModel.getPlayers()){
+        for (Player player : getPlayers()){
             drawPlayer(graphics, player);
         }
     }
@@ -68,12 +54,10 @@ public class Tron extends Engine {
     }
 
     protected boolean isGameFinished(){
-        for (Player player1 : tronModel.getPlayers()){
-            for (Player player2 : tronModel.getPlayers()){
-                for (Point position : player2.getPath()){
-                    if (player1.getCurrentPosition().equals(position)){
-                        return true;
-                    }
+        for (Player player1 : getPlayers()){
+            for (Point position : player1.getPath()){
+                if (player1.getCurrentPosition().equals(position)){
+                    return true;
                 }
             }
         }
@@ -82,7 +66,7 @@ public class Tron extends Engine {
     }
 
     protected void movePlayers(){
-        for (Player player : tronModel.getPlayers()){
+        for (Player player : getPlayers()){
             movePlayer(player);
         }
     }
@@ -125,8 +109,8 @@ public class Tron extends Engine {
     }
 
     private void addPlayersPath(){
-        for (Player player : tronModel.getPlayers()){
+        for (Player player : getPlayers()){
             player.getPath().add(player.getCurrentPosition());
         }
-    }
+    }*/
 }

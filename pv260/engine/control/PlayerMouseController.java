@@ -1,6 +1,6 @@
 package pv260.engine.control;
 
-import pv260.tron.Player;
+import pv260.engine.model.Player;
 
 public class PlayerMouseController implements IPlayerInputController {
     private final MouseControls mouseControls;

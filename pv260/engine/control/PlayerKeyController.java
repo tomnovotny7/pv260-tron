@@ -1,7 +1,7 @@
 package pv260.engine.control;
 
 import com.sun.javafx.scene.traversal.Direction;
-import pv260.tron.Player;
+import pv260.engine.model.Player;
 
 public class PlayerKeyController implements IPlayerInputController {
     private final KeyControls keyControls;
