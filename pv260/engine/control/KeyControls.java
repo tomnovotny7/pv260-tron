@@ -1,4 +1,4 @@
-package pv260.tron;
+package pv260.engine.control;
 
 public class KeyControls {
     private final int upKey;

@@ -1,6 +1,8 @@
 package pv260.tron;
 
 import com.sun.javafx.scene.traversal.Direction;
+import pv260.engine.Core;
+import pv260.engine.control.*;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -12,7 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Tron extends Core implements KeyListener, MouseListener, MouseMotionListener {
-    private int moveAmount = 5;
+    private final int MOVE_AMOUNT = 5;
+    private final int LINE_WIDTH = 10;
+
 
     private List<Player> players;
     private InputController inputController;
@@ -70,7 +74,7 @@ public class Tron extends Core implements KeyListener, MouseListener, MouseMotio
         graphics.setColor(player.getColor());
 
         for (Point point : player.getPath()){
-            graphics.fillRect(point.x, point.y, 10, 10);
+            graphics.fillRect(point.x, point.y, LINE_WIDTH, LINE_WIDTH);
         }
     }
 
@@ -100,28 +104,28 @@ public class Tron extends Core implements KeyListener, MouseListener, MouseMotio
         switch (player.getDirection()){
             case UP:
                 if (playerPosition.y > 0) {
-                    playerPosition.y -= moveAmount;
+                    playerPosition.y -= MOVE_AMOUNT;
                 } else {
                     playerPosition.y = screenManager.getHeight();
                 }
                 break;
             case RIGHT:
                 if (playerPosition.x < screenManager.getWidth()) {
-                    playerPosition.x += moveAmount;
+                    playerPosition.x += MOVE_AMOUNT;
                 } else {
                     playerPosition.x = 0;
                 }
                 break;
             case DOWN:
                 if (playerPosition.y < screenManager.getHeight()) {
-                    playerPosition.y += moveAmount;
+                    playerPosition.y += MOVE_AMOUNT;
                 } else {
                     playerPosition.y = 0;
                 }
                 break;
             case LEFT:
                 if (playerPosition.x > 0) {
-                    playerPosition.x -= moveAmount;
+                    playerPosition.x -= MOVE_AMOUNT;
                 } else {
                     playerPosition.x = screenManager.getWidth();
                 }
@@ -137,6 +141,7 @@ public class Tron extends Core implements KeyListener, MouseListener, MouseMotio
         }
     }
 
+    @Override
     public void keyPressed(KeyEvent e) {
         inputController.handleInput(e.getKeyCode());
     }
@@ -159,6 +164,7 @@ public class Tron extends Core implements KeyListener, MouseListener, MouseMotio
     public void mouseExited(MouseEvent arg0) {
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
         inputController.handleInput(e.getButton());
     }

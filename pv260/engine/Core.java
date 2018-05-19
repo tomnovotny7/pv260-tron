@@ -1,4 +1,6 @@
-package pv260.tron;
+package pv260.engine;
+
+import pv260.engine.ScreenManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -67,6 +69,6 @@ public abstract class Core {
     public void update(long timePassed) {
     }
 
-    public abstract void draw(Graphics2D g);
+    public abstract void draw(Graphics2D graphics);
 
 }
