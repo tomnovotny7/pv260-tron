@@ -40,7 +40,7 @@ public class Tron extends Engine {
         draw(screenManager.getGraphics());
     }
 
-    public void draw(Graphics2D graphics) {
+    private void draw(Graphics2D graphics) {
         drawBackground(graphics);
 
         drawPlayers(graphics);

@@ -21,10 +21,10 @@ public class ScreenManager {
     public DisplayMode findFirstCompatibleMode(DisplayMode[] modes) {
 
         DisplayMode goodModes[] = graphicsDevice.getDisplayModes();
-        for (int i = 0; i < modes.length; i++) {
+        for (DisplayMode mode : modes) {
             for (int j = 0; j < goodModes.length; j++) {
-                if (displayModesMatch(modes[i], goodModes[j])) {
-                    return modes[i];
+                if (displayModesMatch(mode, goodModes[j])) {
+                    return mode;
                 }
             }
         }
