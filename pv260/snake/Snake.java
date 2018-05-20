@@ -7,42 +7,66 @@ import pv260.engine.control.MouseControls;
 import pv260.engine.control.PlayerKeyController;
 import pv260.engine.control.PlayerMouseController;
 import pv260.engine.model.Player;
+import pv260.snake.model.SnakeModel;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-public class Snake /*extends Engine*/ {
-    /*private int score = 0;
+public class Snake extends Engine {
+    private SnakeModel snakeModel;
 
     public void init() {
         super.init();
 
-        Player player1 = new Player(Color.GREEN, new Point(40, 40), Direction.RIGHT);
+        snakeModel = new SnakeModel(screenManager.getHeight(), screenManager.getWidth());
 
-        addPlayer(player1, new PlayerKeyController(player1,
+        Player player1 = new Player(Color.GREEN, new Point(40, 40), Direction.RIGHT);
+        Player player2 = new Player(Color.RED, new Point(600, 400), Direction.LEFT);
+        Player player3 = new Player(Color.BLUE, new Point(300, 200), Direction.LEFT);
+
+        snakeModel.addPlayer(player1, new PlayerKeyController(player1,
                 new KeyControls(KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT)));
+        snakeModel.addPlayer(player2, new PlayerKeyController(player2,
+                new KeyControls(KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_A)));
+        snakeModel.addPlayer(player3, new PlayerMouseController(player3,
+                new MouseControls(MouseEvent.BUTTON1, MouseEvent.BUTTON3)));
     }
 
-    public void draw(Graphics2D graphics) {
-        movePlayers();
+    public void tick(){
+        snakeModel.movePlayers();
 
-        if (isGameFinished()){
-            System.exit(0);
+        if (snakeModel.isGameFinished()){
+            exit();
         }
 
-        addPlayersPath();
+        draw(screenManager.getGraphics());
+    }
 
-        graphics.setColor(Color.BLACK);
-        graphics.fillRect(0, 0, screenManager.getWidth(), screenManager.getHeight());
+    private void draw(Graphics2D graphics) {
+        drawBackground(graphics);
+
+        drawFood(graphics);
 
         drawPlayers(graphics);
     }
 
+    private void drawBackground(Graphics2D graphics){
+        graphics.setColor(Color.BLACK);
+        graphics.fillRect(0, 0, screenManager.getWidth(), screenManager.getHeight());
+    }
+
     private void drawPlayers(Graphics2D graphics){
-        for (Player player : getPlayers()){
+        for (Player player : snakeModel.getPlayers()){
             drawPlayer(graphics, player);
         }
+    }
+
+    private void drawFood(Graphics2D graphics){
+        Point foodPoint = snakeModel.getFoodPoint();
+
+        graphics.setColor(Color.YELLOW);
+        graphics.fillRect(foodPoint.x, foodPoint.y, LINE_WIDTH, LINE_WIDTH);
     }
 
     private void drawPlayer(Graphics2D graphics, Player player){
@@ -53,64 +77,13 @@ public class Snake /*extends Engine*/ {
         }
     }
 
-    protected boolean isGameFinished(){
-        for (Player player1 : getPlayers()){
-            for (Point position : player1.getPath()){
-                if (player1.getCurrentPosition().equals(position)){
-                    return true;
-                }
-            }
-        }
-
-        return false;
+    @Override
+    public void keyPressed(KeyEvent e) {
+        snakeModel.keyPressed(e);
     }
 
-    protected void movePlayers(){
-        for (Player player : getPlayers()){
-            movePlayer(player);
-        }
+    @Override
+    public void mousePressed(MouseEvent e) {
+        snakeModel.mousePressed(e);
     }
-
-    private void movePlayer(Player player){
-        Point playerPosition = new Point(player.getCurrentPosition());
-
-        switch (player.getDirection()){
-            case UP:
-                if (playerPosition.y > 0) {
-                    playerPosition.y -= MOVE_AMOUNT;
-                } else {
-                    playerPosition.y = screenManager.getHeight();
-                }
-                break;
-            case RIGHT:
-                if (playerPosition.x < screenManager.getWidth()) {
-                    playerPosition.x += MOVE_AMOUNT;
-                } else {
-                    playerPosition.x = 0;
-                }
-                break;
-            case DOWN:
-                if (playerPosition.y < screenManager.getHeight()) {
-                    playerPosition.y += MOVE_AMOUNT;
-                } else {
-                    playerPosition.y = 0;
-                }
-                break;
-            case LEFT:
-                if (playerPosition.x > 0) {
-                    playerPosition.x -= MOVE_AMOUNT;
-                } else {
-                    playerPosition.x = screenManager.getWidth();
-                }
-                break;
-        }
-
-        player.setCurrentPosition(playerPosition);
-    }
-
-    private void addPlayersPath(){
-        for (Player player : getPlayers()){
-            player.getPath().add(player.getCurrentPosition());
-        }
-    }*/
 }

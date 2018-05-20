@@ -1,4 +1,4 @@
-package pv260.tron.model;
+package pv260.snake.model;
 
 import pv260.engine.control.IPlayerInputController;
 import pv260.engine.control.InputController;
@@ -10,22 +10,27 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class TronModel implements IEngineModel {
+public class SnakeModel implements IEngineModel {
     private final int MOVE_AMOUNT = 5;
 
     private int screenHeight;
     private int screenWidth;
 
+    private Point foodPoint;
+
     private List<Player> players;
     private InputController inputController;
 
-    public TronModel(int screenHeight, int screenWidth){
+    public SnakeModel(int screenHeight, int screenWidth){
         players = new ArrayList<>();
         inputController = new InputController();
 
         this.screenHeight = screenHeight;
         this.screenWidth = screenWidth;
+
+        generateNewFoodPoint();
     }
 
     public void addPlayer(Player player, IPlayerInputController playerInputController){
@@ -89,12 +94,44 @@ public class TronModel implements IEngineModel {
         return false;
     }
 
+    private boolean isPointOccupiedByPlayer(Point point){
+        for (Player player : getPlayers()){
+            for (Point position : player.getPath()){
+                if (point.equals(position)){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public Point getFoodPoint(){
+        return foodPoint;
+    }
+
+    private void generateNewFoodPoint(){
+        Point point;
+        Random random = new Random();
+
+        do {
+            int x = random.nextInt(screenWidth);
+            int y = random.nextInt(screenHeight);
+            x -= x % MOVE_AMOUNT;
+            y -= y % MOVE_AMOUNT;
+            point = new Point(x, y);
+
+        } while (isPointOccupiedByPlayer(point));
+
+        foodPoint = point;
+    }
+
     public void movePlayers(){
         for (Player player : getPlayers()){
             movePlayer(player);
         }
 
-        addPlayersPath();
+        managePlayersPath();
     }
 
     private void movePlayer(Player player){
@@ -134,9 +171,17 @@ public class TronModel implements IEngineModel {
         player.setCurrentPosition(playerPosition);
     }
 
-    private void addPlayersPath(){
+    private void managePlayersPath(){
         for (Player player : getPlayers()){
             player.getPath().add(player.getCurrentPosition());
+        }
+
+        for (Player player : getPlayers()){
+            if (player.getCurrentPosition().equals(foodPoint)) {
+                generateNewFoodPoint();
+            } else if (player.getPath().size() > 3){
+                player.getPath().remove(0);
+            }
         }
     }
 }
